@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TraslationHelper.BLL\TraslationHelper.BLL.csproj" />
+    <ProjectReference Include="..\TraslationHelper.DAL.GoogleDocument\TraslationHelper.DAL.GoogleDocument.csproj" />
+    <ProjectReference Include="..\TraslationHelper.Domain\TraslationHelper.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
