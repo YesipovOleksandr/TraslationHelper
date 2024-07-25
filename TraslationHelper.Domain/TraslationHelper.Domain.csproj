@@ -11,10 +11,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Abstract\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Google.Apis.Docs.v1" Version="1.68.0.3490" />
   </ItemGroup>
 

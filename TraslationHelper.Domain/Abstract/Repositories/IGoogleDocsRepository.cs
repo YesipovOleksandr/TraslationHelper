@@ -1,9 +1,10 @@
 ﻿using Google.Apis.Docs.v1;
+using Google.Apis.Docs.v1.Data;
 
 namespace TraslationHelper.Domain.Abstract.Repositories
 {
     public interface IGoogleDocsRepository
     {
-        public Task<DocsService> GetDocsByIdAsync(string documentId);
+        public Task<Document> GetDocsByIdAsync(string documentId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Docs.v1;
+using Google.Apis.Docs.v1.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace TraslationHelper.DAL.GoogleDocument.Repositories
             _googleDocumentSettings = configuration.GetSection("GoogleDocumentSettings").Get<GoogleDocumentSettings>();
         }
 
-        public async Task<DocsService> GetDocsByIdAsync(string documentId)
+        public async Task<Document> GetDocsByIdAsync(string documentId)
         {
             var clientSecrets = new ClientSecrets
             {
@@ -26,13 +27,11 @@ namespace TraslationHelper.DAL.GoogleDocument.Repositories
                 ClientSecret = _googleDocumentSettings.ClientSecret
             };
 
-            UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                clientSecrets,
-                Scopes,
-                "user",
-                CancellationToken.None,
-                new FileDataStore(_googleDocumentSettings.TokenPath, true)
-            );
+            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                  clientSecrets,
+                  new[] { DocsService.Scope.Documents },
+                  "user",
+                  CancellationToken.None);
 
             var service = new DocsService(new BaseClientService.Initializer()
             {
@@ -40,7 +39,10 @@ namespace TraslationHelper.DAL.GoogleDocument.Repositories
                 ApplicationName = _googleDocumentSettings.ApplicationName,
             });
 
-            return service;
+            var request = service.Documents.Get(documentId);
+            var document = await request.ExecuteAsync();
+
+            return document;
         }
     }
 }
