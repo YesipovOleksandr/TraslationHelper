@@ -1,7 +1,15 @@
+using TraslationHelper.DAL.GoogleDocument.Repositories;
+using TraslationHelper.Domain.Abstract.Repositories;
+using TraslationHelper.Domain.Models.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<GoogleDocumentSettings>(configuration.GetSection("GoogleDocumentSettings"));
+
+builder.Services.AddTransient<IGoogleDocsRepository, GoogleDocsRepository>();
 
 var app = builder.Build();
 
