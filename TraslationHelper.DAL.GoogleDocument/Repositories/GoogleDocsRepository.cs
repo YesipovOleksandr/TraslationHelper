@@ -21,7 +21,7 @@ namespace TraslationHelper.DAL.GoogleDocument.Repositories
         public async Task<Document> GetDocsByIdAsync(string documentId)
         {
             GoogleCredential credential;
-            using (var stream = new FileStream("json_google_auth.json.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("json_google_auth.json", FileMode.Open, FileAccess.Read))
             {
                 credential = GoogleCredential.FromStream(stream)
                     .CreateScoped(DocsService.Scope.Documents);

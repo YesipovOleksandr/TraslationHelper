@@ -2,20 +2,29 @@
     ViewData["Title"] = "Home Page";
 }
 
-<form asp-controller="Home" asp-action="Upload" method="post" enctype="multipart/form-data">
-    <div>
-        <label for="googleDocUrl">Url Google document</label>
-        <input type="text" name="googleDocUrl" required />
+<div class="main_block">
+    <h1>Traslation Helpe</h1>
+    <div class="form">
+        <form asp-controller="Home" asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div class="main_block__wrapper_input">
+                <label for="googleDocUrl">Url Google document</label>
+                <input type="text" name="googleDocUrl" required />
+            </div>
+            <div class="main_block__wrapper_input file-input-container">
+                <label for="htmlFile">HTML File</label>
+                <input class="file_block file-input" id="fileInput" type="file" name="htmlFile" accept=".html" required />
+                <label for="fileInput" class="custom-file-label">Choose File</label>
+            </div>
+            <div class="main_block__wrapper_check">
+                <label class="custom-checkbox">
+                    <input type="checkbox" name="highlight" />
+                    <span class="checkmark"></span>
+                </label>
+                <label for="highlight">
+                    Highlight Russian text
+                </label>
+            </div>
+            <button class="main_block__button" type="submit">Upload</button>
+        </form>
     </div>
-    <div>
-        <label for="htmlFile">HTML File</label>
-        <input type="file" name="htmlFile" accept=".html" required />
-    </div>
-    <div>
-        <input type="checkbox" id="highlight" name="highlight" value="false" />
-        <label for="highlight">
-            Highlight Russian text
-        </label>
-    </div>
-    <button type="submit">Upload</button>
-</form>
+</div>
