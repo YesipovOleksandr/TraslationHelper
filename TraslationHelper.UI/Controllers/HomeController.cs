@@ -30,7 +30,7 @@ namespace TraslationHelper.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile htmlFile, string googleDocUrl)
+        public async Task<IActionResult> Upload(IFormFile htmlFile, string googleDocUrl, bool highlight)
         {
             if (string.IsNullOrWhiteSpace(googleDocUrl))
             {
@@ -59,6 +59,11 @@ namespace TraslationHelper.UI.Controllers
 
             string updatedHtmlContent = _translationUpdaterService.ReplaceValuesInHtmlContent(htmlContent, replacementWords);
 
+            if (highlight)
+            {
+                updatedHtmlContent = AddHighlightScriptAndStyles(updatedHtmlContent);
+            }
+
             var updatedStream = await _streamService.GetStreamFromStringAsync(updatedHtmlContent);
 
             return File(updatedStream, "text/html", $"{htmlFile.Name}_modified.html");
@@ -68,6 +73,54 @@ namespace TraslationHelper.UI.Controllers
         {
             var match = Regex.Match(url, @"^https:\/\/docs\.google\.com\/document\/d\/([a-zA-Z0-9-_]+)\/");
             return match.Success ? match.Groups[1].Value : null;
+        }
+
+        private string AddHighlightScriptAndStyles(string htmlContent)
+        {
+            var script = @"
+                <script>
+                    function highlightRussianText(element) {
+                        if (element.nodeType === 3) {
+                            const russianCharPattern = /[а-€ј-яЄ®]/g;
+                            const parent = element.parentNode;
+                            const text = element.nodeValue;
+                
+                            if (russianCharPattern.test(text)) {
+                                const newHTML = text.replace(russianCharPattern, '<span class=""highlight"">$&</span>');
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = newHTML;
+                                while (tempDiv.firstChild) {
+                                    parent.insertBefore(tempDiv.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        } else if (element.nodeType === 1 && element.nodeName !== 'SCRIPT' && element.nodeName !== 'STYLE') { // Ёлементный узел
+                            for (let i = 0; i < element.childNodes.length; i++) {
+                                highlightRussianText(element.childNodes[i]);
+                            }
+                        }
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        highlightRussianText(document.body);
+                    });
+                </script>";
+
+                        var styles = @"
+                <style>
+                    .highlight {
+                        background-color: red; 
+                        font-weight: bold;
+                    }
+                </style>";
+
+            var closingBodyIndex = htmlContent.LastIndexOf("</body>");
+            if (closingBodyIndex >= 0)
+            {
+                htmlContent = htmlContent.Insert(closingBodyIndex, script + styles);
+            }
+
+            return htmlContent;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

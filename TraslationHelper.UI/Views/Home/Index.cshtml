@@ -3,13 +3,19 @@
 }
 
 <form asp-controller="Home" asp-action="Upload" method="post" enctype="multipart/form-data">
-    <div class="form-group">
+    <div>
         <label for="googleDocUrl">Url Google document</label>
-            <input type="text" class="form-control" id="googleDocUrl" name="googleDocUrl" required />
+        <input type="text" name="googleDocUrl" required />
     </div>
-    <div class="form-group">
+    <div>
         <label for="htmlFile">HTML File</label>
-        <input type="file" class="form-control-file" id="htmlFile" name="htmlFile" accept=".html" required />
+        <input type="file" name="htmlFile" accept=".html" required />
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
+    <div>
+        <input type="checkbox" id="highlight" name="highlight" value="false" />
+        <label for="highlight">
+            Highlight Russian text
+        </label>
+    </div>
+    <button type="submit">Upload</button>
 </form>
