@@ -26,7 +26,6 @@ namespace TraslationHelper.BLL.Services
                         List<string> text1 = new List<string>();
                         List<string> text2 = new List<string>();
 
-                        // Чтение содержимого первой ячейки
                         var TableCells1 = row.TableCells[0];
                         foreach (var elements1 in TableCells1?.Content)
                         {
@@ -39,7 +38,6 @@ namespace TraslationHelper.BLL.Services
                             }
                         }
 
-                        // Чтение содержимого второй ячейки
                         var TableCells2 = row.TableCells[1];
                         foreach (var elements2 in TableCells2?.Content)
                         {

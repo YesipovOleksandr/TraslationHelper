@@ -18,20 +18,14 @@ namespace TraslationHelper.DAL.GoogleDocument.Repositories
         {
             _googleDocumentSettings = configuration.GetSection("GoogleDocumentSettings").Get<GoogleDocumentSettings>();
         }
-
         public async Task<Document> GetDocsByIdAsync(string documentId)
         {
-            var clientSecrets = new ClientSecrets
+            GoogleCredential credential;
+            using (var stream = new FileStream("json_google_auth.json.json", FileMode.Open, FileAccess.Read))
             {
-                ClientId = _googleDocumentSettings.ClientId,
-                ClientSecret = _googleDocumentSettings.ClientSecret
-            };
-
-            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                  clientSecrets,
-                  new[] { DocsService.Scope.Documents },
-                  "user",
-                  CancellationToken.None);
+                credential = GoogleCredential.FromStream(stream)
+                    .CreateScoped(DocsService.Scope.Documents);
+            }
 
             var service = new DocsService(new BaseClientService.Initializer()
             {
