@@ -9,7 +9,7 @@ namespace TraslationHelper.BLL.Services
         {
             foreach (var kvp in replacements)
             {
-                string pattern = Regex.Escape(kvp.Key); // Создание безопасного паттерна для поиска
+                string pattern = Regex.Escape(kvp.Key); 
                 string replacement = kvp.Value;
                 htmlContent = Regex.Replace(htmlContent, pattern, replacement, RegexOptions.IgnoreCase);
             }
