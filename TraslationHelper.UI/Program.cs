@@ -13,6 +13,8 @@ builder.Services.Configure<GoogleDocumentSettings>(configuration.GetSection("Goo
 
 builder.Services.AddTransient<IGoogleDocsRepository, GoogleDocsRepository>();
 builder.Services.AddTransient<IGoogleDocTranslationService, GoogleDocTranslationService>();
+builder.Services.AddTransient<ITranslationUpdaterService, TranslationUpdaterService>();
+builder.Services.AddTransient<IStreamService, StreamService>();
 
 
 var app = builder.Build();
