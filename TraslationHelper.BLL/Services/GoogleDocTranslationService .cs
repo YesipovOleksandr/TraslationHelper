@@ -52,17 +52,37 @@ namespace TraslationHelper.BLL.Services
 
                         int count = Math.Min(text1.Count, text2.Count);
 
-                        for (int i = 0; i < count; i++)
+                        for (int i = 0, j = 0; i < count; i++, j++)
                         {
-                            string key = text1[i];
-                            string value = text2[i];
-
-                            if (!dictionary.ContainsKey(key))
+                            if (i < text1.Count() && j < text2.Count())
                             {
-                                dictionary.Add(key, value);
+                                string key = text1[i].Trim();
+                                string value = text2[j].Trim();
+
+                                if (value.Length < 3 && text1.Count < text2.Count)
+                                {
+                                    j++;
+                                    value = text2[j].Trim();
+                                }
+
+                                char[] unwantedChars = { ',', ':', '.', '-', '—', ' ', '\t' };
+
+                                while (key.Length > 0 && unwantedChars.Contains(key[0]))
+                                {
+                                    key = key.Substring(1).TrimStart(unwantedChars);
+                                }
+
+                                while (value.Length > 0 && unwantedChars.Contains(value[0]))
+                                {
+                                    value = value.Substring(1).TrimStart(unwantedChars);
+                                }
+
+                                if (!string.IsNullOrEmpty(key) && !dictionary.ContainsKey(key.ToLower()))
+                                {
+                                    dictionary.Add(key.ToLower(), value);
+                                }
                             }
                         }
-
                     }
                 }
             }

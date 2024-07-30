@@ -11,26 +11,26 @@ namespace TraslationHelper.UI.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IGoogleDocTranslationService _googleDocTranslationService;
         private readonly IStreamService _streamService;
-        private readonly ITranslationUpdaterService _translationUpdaterService; 
+        private readonly ITranslationUpdaterService _translationUpdaterService;
 
         public HomeController(ILogger<HomeController> logger,
-                              IGoogleDocTranslationService googleDocTranslationService, 
+                              IGoogleDocTranslationService googleDocTranslationService,
                               ITranslationUpdaterService translationUpdaterService,
                               IStreamService streamService)
         {
             _logger = logger;
             _googleDocTranslationService = googleDocTranslationService;
-            _translationUpdaterService = translationUpdaterService; 
+            _translationUpdaterService = translationUpdaterService;
             _streamService = streamService;
         }
 
         public async Task<IActionResult> Index()
-        {          
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile htmlFile, string googleDocUrl, bool highlight)
+        public async Task<IActionResult> Upload(IFormFile htmlFile, string googleDocUrl, bool highlight, bool notExactMatch)
         {
             if (string.IsNullOrWhiteSpace(googleDocUrl))
             {
@@ -57,7 +57,12 @@ namespace TraslationHelper.UI.Controllers
 
             string htmlContent = await _streamService.ReadStreamContentAsync(htmlFile.OpenReadStream());
 
-            string updatedHtmlContent = _translationUpdaterService.ReplaceValuesInHtmlContent(htmlContent, replacementWords);
+            string updatedHtmlContent = _translationUpdaterService.ReplaceValuesExactMatchInHtmlContent(htmlContent, replacementWords);
+
+            if (notExactMatch)
+            {
+                updatedHtmlContent = _translationUpdaterService.ReplaceValuesInHtmlContent(htmlContent, replacementWords);
+            }
 
             if (highlight)
             {
@@ -106,7 +111,7 @@ namespace TraslationHelper.UI.Controllers
                     });
                 </script>";
 
-                        var styles = @"
+            var styles = @"
                 <style>
                     .highlight {
                         background-color: red; 
